@@ -1,0 +1,20 @@
+{
+  "name": "planit-sdet-tasks",
+  "version": "1.0.0",
+  "description": "task one for automation test cases, taks two for chanllenges",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Terence625/Planit-SDET-tasks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Terence625/Planit-SDET-tasks/issues"
+  },
+  "homepage": "https://github.com/Terence625/Planit-SDET-tasks#readme"
+}
