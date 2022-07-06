@@ -16,6 +16,7 @@
   "bugs": {
     "url": "https://github.com/Terence625/Planit-SDET-tasks/issues"
   },
+  "type": "module",
   "homepage": "https://github.com/Terence625/Planit-SDET-tasks#readme",
   "dependencies": {
     "axios": "^0.27.2"
