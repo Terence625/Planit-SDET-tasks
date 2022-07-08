@@ -1,23 +1,38 @@
 {
   "name": "planit-sdet-tasks",
   "version": "1.0.0",
-  "description": "1.  In home page, when clicking 'Start shopping' button or 'Shop' nav link, should navigate to shop page; When clicking 'Contact' nav link, should navigate to contact page; When clicking 'Login' button, should display login pop-up window'; When clicking 'Cart' button, should navigate to cart page.\r 2.  In login page, when inputing correct username and password, should login successfully; When inputing incorrect username or incorrect password, should not login successfully with error messages.\r 3.  In shop page, when clicking 'Buy' button under any product, should add the product to the cart and quantity of the product in cart should be the clicks of the button.\r 4.  In cart page, the subtotal of one product should be the price times the quantity, and total should be the sum of all subtotals. When changing the quantity in the inout box, the subtotal of that product and the total should change correspondingly.\r 5.  In cart page, when clicking the 'delete' button, should delete that product; When click the 'Empty cart' button, should delete all the products in the cart; When clicking the 'Checkout' button or 'checkout' link, should navigate to checkout page.\r 6.  In checkout page, when filling all the mandatory fields with correct formats, should submit successfully and display processing order loader; After checkout, should navigate to checkout successful page with order number displayed and the cart will be cleaned, and when clicking the 'Shopping Again' button, should navigate to shop page.\r 7.  In checkout page, when any mandatory field is blank or is filled with incorrect formats, should not submit successfully and display error messages.\r 8.  In contact page, when filling all the mandatory fields with correct formats, should submit successfully and display sending feedback loader; After submit, should navigate to feedback successful page, and when clicking 'Back' button, should navigate to contact page.\r 9.  In contact page, when any mandatory field is blank or is filled with incorrect formats, should not submit successfully and display error messages.\r 10. Performance automation test workflow: simulate users add products to cart, then checkout from cart, then finish payment. numbers of users according to the performance requirement of the system.",
-  "main": "challenge1.js",
+  "description": "",
   "scripts": {
+    "start": "react-scripts start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Terence625/Planit-SDET-tasks.git"
+    "type": "git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Terence Tian",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Terence625/Planit-SDET-tasks/issues"
-  },
-  "homepage": "https://github.com/Terence625/Planit-SDET-tasks#readme",
   "dependencies": {
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "typescript": "^4.7.4"
   }
 }
