@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 interface Person {
   name: string;
@@ -15,6 +15,14 @@ const OriginalTable = ({
   peopleList,
   onCellDataChange,
 }: IOriginalTableProps) => {
+  const [cellEditable, setCellEditable] = useState(
+    Array.from({ length: peopleList.length }, () => ({
+      name: false,
+      DOB: false,
+      nationality: false,
+    }))
+  );
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number,
@@ -31,14 +39,30 @@ const OriginalTable = ({
     );
   };
 
+  const handleDoubleClick = (index: number, key: string) => {
+    setCellEditable(
+      cellEditable.map((cell, i) => {
+        if (i === index) {
+          cell[key as keyof Person] = true;
+          return cell;
+        }
+        return cell;
+      })
+    );
+  };
+
   const dataRows = peopleList.map((row, index) => {
     return (
       <tr key={index}>
-        <td>
-          <input
-            value={row.name}
-            onChange={(e) => handleChange(e, index, "name")}
-          />
+        <td onDoubleClick={() => handleDoubleClick(index, "name")}>
+          {cellEditable[index].name ? (
+            <input
+              value={row.name}
+              onChange={(e) => handleChange(e, index, "name")}
+            />
+          ) : (
+            row.name
+          )}
         </td>
         <td>
           <input
