@@ -21,6 +21,10 @@ table input {
   border-style: hidden; 
 }
 
+table input:focus {
+  outline: none; 
+}
+
 a:link {
   text-decoration: none;
 }

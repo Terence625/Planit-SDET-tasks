@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import OriginalTable from "./OriginalTable";
+import Table from "./Table";
 
 const initialPeopleList = [
   { name: "Terence", DOB: "1993-04-25", nationality: "China" },
@@ -24,13 +24,13 @@ const Challenge5 = () => {
 
   return (
     <div>
-      <OriginalTable
+      <Table
         peopleList={peopleList}
         onCellDataChange={(value) => setPeopleList(value)}
       />
       <button onClick={handleDuplicate}>Duplicate</button>
       <button onClick={handleRemove}>Remove</button>
-      {duplicate && <OriginalTable peopleList={duplicatedPeopleList} />}
+      {duplicate && <Table peopleList={duplicatedPeopleList} />}
     </div>
   );
 };

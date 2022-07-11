@@ -6,15 +6,12 @@ interface Person {
   nationality: string;
 }
 
-interface IOriginalTableProps {
+interface ITableProps {
   peopleList: Person[];
   onCellDataChange?: (value: Person[]) => void;
 }
 
-const OriginalTable = ({
-  peopleList,
-  onCellDataChange,
-}: IOriginalTableProps) => {
+const Table = ({ peopleList, onCellDataChange }: ITableProps) => {
   const [cellEditable, setCellEditable] = useState(
     Array.from({ length: peopleList.length }, () => ({
       name: false,
@@ -39,16 +36,32 @@ const OriginalTable = ({
     );
   };
 
-  const handleDoubleClick = (index: number, key: string) => {
+  const setCellEditableFun = (index: number, key: string, boo: boolean) => {
     setCellEditable(
       cellEditable.map((cell, i) => {
         if (i === index) {
-          cell[key as keyof Person] = true;
+          cell[key as keyof Person] = boo;
           return cell;
         }
         return cell;
       })
     );
+  };
+
+  const handleDoubleClick = (index: number, key: string) => {
+    setCellEditableFun(index, key, true);
+  };
+
+  const handleBlur = (index: number, key: string) => {
+    setCellEditableFun(index, key, false);
+  };
+
+  const handleEnterKeyPress = (
+    e: React.KeyboardEvent,
+    index: number,
+    key: string
+  ) => {
+    if (e.key === "Enter") setCellEditableFun(index, key, false);
   };
 
   const dataRows = peopleList.map((row, index) => {
@@ -59,22 +72,34 @@ const OriginalTable = ({
             <input
               value={row.name}
               onChange={(e) => handleChange(e, index, "name")}
+              onBlur={() => handleBlur(index, "name")}
+              onKeyDown={(e) => handleEnterKeyPress(e, index, "name")}
             />
           ) : (
             row.name
           )}
         </td>
-        <td>
-          <input
-            value={row.DOB}
-            onChange={(e) => handleChange(e, index, "DOB")}
-          />
+        <td onDoubleClick={() => handleDoubleClick(index, "DOB")}>
+          {cellEditable[index].DOB ? (
+            <input
+              value={row.DOB}
+              onChange={(e) => handleChange(e, index, "DOB")}
+              onBlur={() => handleBlur(index, "DOB")}
+            />
+          ) : (
+            row.DOB
+          )}
         </td>
-        <td>
-          <input
-            value={row.nationality}
-            onChange={(e) => handleChange(e, index, "nationality")}
-          />
+        <td onDoubleClick={() => handleDoubleClick(index, "nationality")}>
+          {cellEditable[index].nationality ? (
+            <input
+              value={row.nationality}
+              onChange={(e) => handleChange(e, index, "nationality")}
+              onBlur={() => handleBlur(index, "nationality")}
+            />
+          ) : (
+            row.nationality
+          )}
         </td>
       </tr>
     );
@@ -94,4 +119,4 @@ const OriginalTable = ({
   );
 };
 
-export default OriginalTable;
+export default Table;
