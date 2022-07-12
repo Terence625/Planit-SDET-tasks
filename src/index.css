@@ -5,26 +5,6 @@ body {
   align-items: center;
 }
 
-table, th, td {
-  margin-top: 5px;
-  width: 500px;
-  border: 1px solid black;
-  border-collapse: collapse;
-}
-th {
-  text-align: left;
-}
-
-table input {
-  width: 100%;
-  box-sizing: border-box;
-  border-style: hidden; 
-}
-
-table input:focus {
-  outline: none; 
-}
-
 a:link {
   text-decoration: none;
 }

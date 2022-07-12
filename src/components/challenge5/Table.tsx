@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./Table.css";
 
 const setArrayObjAllProperty = <T, K extends string, V>(
   arrObj: Record<K, V>[],
@@ -68,6 +69,8 @@ const Table = <
     setCellEditable(setArrayObjAllProperty(newRowList, false));
   };
 
+  const handleDeleteRows = () => {};
+
   const dataCells = (index: number, key: Key, value: string) => {
     return (
       <td
@@ -75,29 +78,36 @@ const Table = <
         onDoubleClick={() => setCellEditableFun(index, key, true)}
       >
         {(cellEditable[index] as Record<Key, boolean>)[key] ? (
-          <input
-            autoFocus
-            value={value}
-            onChange={(e) => handleCellChange(e, index, key)}
-            onBlur={() => setCellEditableFun(index, key, false)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") setCellEditableFun(index, key, false);
-            }}
-          />
+          <div className="inputCell">
+            <input
+              autoFocus
+              value={value}
+              onChange={(e) => handleCellChange(e, index, key)}
+              onBlur={() => setCellEditableFun(index, key, false)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") setCellEditableFun(index, key, false);
+              }}
+            />
+          </div>
         ) : (
-          value
+          <div className="dataCell">{value}</div>
         )}
       </td>
     );
   };
 
   const columnHeaders = columnHeader.map((header) => (
-    <th key={String(header.key)}>{header.label}</th>
+    <th key={String(header.key)}>
+      {header.label}
+    </th>
   ));
 
   const dataRows = rowList.map((row, index) => {
     return (
       <tr key={String(index)}>
+        <td>
+          <input type="checkbox" id={String(index)} />
+        </td>
         {(Object.entries(row) as [Key, string][]).map(([key, value]) =>
           dataCells(index, key, value)
         )}
@@ -106,14 +116,20 @@ const Table = <
   });
 
   return (
-    <div>
+    <div className="Table">
+      <button onClick={handleAddNewLine}>Add</button>
+      <button onClick={handleDeleteRows}>Delete</button>
       <table>
         <thead>
-          <tr>{columnHeaders}</tr>
+          <tr>
+            <th>
+              <input type="checkbox" />
+            </th>
+            {columnHeaders}
+          </tr>
         </thead>
         <tbody>{dataRows}</tbody>
       </table>
-      <button onClick={handleAddNewLine}>Add new line</button>
     </div>
   );
 };
