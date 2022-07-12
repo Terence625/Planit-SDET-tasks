@@ -25,12 +25,26 @@ const Challenge5 = () => {
   return (
     <div>
       <Table
-        peopleList={peopleList}
+        columnHeader={[
+          { key: "name", label: "Name" },
+          { key: "DOB", label: "Date of Birth" },
+          { key: "nationality", label: "Nationality" },
+        ]}
+        rowList={peopleList}
         onCellDataChange={(value) => setPeopleList(value)}
       />
       <button onClick={handleDuplicate}>Duplicate</button>
       <button onClick={handleRemove}>Remove</button>
-      {duplicate && <Table peopleList={duplicatedPeopleList} />}
+      {duplicate && (
+        <Table
+          columnHeader={[
+            { key: "name", label: "Name" },
+            { key: "DOB", label: "Date of Birth" },
+            { key: "nationality", label: "Nationality" },
+          ]}
+          rowList={duplicatedPeopleList}
+        />
+      )}
     </div>
   );
 };

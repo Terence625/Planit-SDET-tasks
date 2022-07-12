@@ -1,106 +1,89 @@
 import React, { useState } from "react";
 
-interface Person {
-  name: string;
-  DOB: string;
-  nationality: string;
+interface ITableProps<RowType, Key> {
+  columnHeader: {
+    key: Key;
+    label: string;
+  }[];
+  rowList: RowType[];
+  onCellDataChange?: (value: RowType[]) => void;
 }
 
-interface ITableProps {
-  peopleList: Person[];
-  onCellDataChange?: (value: Person[]) => void;
-}
-
-const Table = ({ peopleList, onCellDataChange }: ITableProps) => {
+const Table = <
+  RowType extends { [P in Key]: string },
+  Key extends keyof RowType
+>({
+  columnHeader,
+  rowList,
+  onCellDataChange,
+}: ITableProps<RowType, Key>) => {
   const [cellEditable, setCellEditable] = useState(
-    Array.from({ length: peopleList.length }, () => ({
-      name: false,
-      DOB: false,
-      nationality: false,
-    }))
+    Array.from(rowList, (row) =>
+      Object.keys(row).reduce((acc, key) => {
+        return { ...acc, [key]: false };
+      }, {})
+    )
   );
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number,
-    key: string
+    key: Key
   ) => {
     onCellDataChange?.(
-      peopleList.map((person, i) => {
+      rowList.map((row, i) => {
         if (i === index) {
-          person[key as keyof Person] = e.target.value;
-          return person;
+          return { ...row, [key]: e.target.value };
         }
-        return person;
+        return row;
       })
     );
   };
 
-  const setCellEditableFun = (index: number, key: string, boo: boolean) => {
+  const setCellEditableFun = (index: number, key: Key, boo: boolean) => {
     setCellEditable(
       cellEditable.map((cell, i) => {
         if (i === index) {
-          cell[key as keyof Person] = boo;
-          return cell;
+          return { ...cell, [key]: boo };
         }
         return cell;
       })
     );
   };
 
-  const handleDoubleClick = (index: number, key: string) => {
-    setCellEditableFun(index, key, true);
-  };
-
-  const handleBlur = (index: number, key: string) => {
-    setCellEditableFun(index, key, false);
-  };
-
-  const handleEnterKeyPress = (
-    e: React.KeyboardEvent,
-    index: number,
-    key: string
-  ) => {
-    if (e.key === "Enter") setCellEditableFun(index, key, false);
-  };
-
-  const dataRows = peopleList.map((row, index) => {
+  const dataCells = (index: number, key: Key, value: string) => {
     return (
-      <tr key={index}>
-        <td onDoubleClick={() => handleDoubleClick(index, "name")}>
-          {cellEditable[index].name ? (
-            <input
-              value={row.name}
-              onChange={(e) => handleChange(e, index, "name")}
-              onBlur={() => handleBlur(index, "name")}
-              onKeyDown={(e) => handleEnterKeyPress(e, index, "name")}
-            />
-          ) : (
-            row.name
-          )}
-        </td>
-        <td onDoubleClick={() => handleDoubleClick(index, "DOB")}>
-          {cellEditable[index].DOB ? (
-            <input
-              value={row.DOB}
-              onChange={(e) => handleChange(e, index, "DOB")}
-              onBlur={() => handleBlur(index, "DOB")}
-            />
-          ) : (
-            row.DOB
-          )}
-        </td>
-        <td onDoubleClick={() => handleDoubleClick(index, "nationality")}>
-          {cellEditable[index].nationality ? (
-            <input
-              value={row.nationality}
-              onChange={(e) => handleChange(e, index, "nationality")}
-              onBlur={() => handleBlur(index, "nationality")}
-            />
-          ) : (
-            row.nationality
-          )}
-        </td>
+      <td
+        key={String(key)}
+        onDoubleClick={() => setCellEditableFun(index, key, true)}
+      >
+        {(cellEditable[index] as Record<Key, string>)[key] ? (
+          <input
+            autoFocus
+            value={value}
+            onChange={(e) => handleChange(e, index, key)}
+            onBlur={() => setCellEditableFun(index, key, false)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") setCellEditableFun(index, key, false);
+            }}
+          />
+        ) : (
+          value
+        )}
+      </td>
+    );
+  };
+
+  const columnHeaders = columnHeader.map((header) => (
+    <th key={String(header.key)}>{header.label}</th>
+  ));
+
+  const dataRows = rowList.map((row, index) => {
+    return (
+      <tr key={String(index)}>
+        {(Object.entries(row) as [Key,string][]).map(([key, value]) =>
+          dataCells(index, key, value)
+        )}
       </tr>
     );
   });
@@ -108,11 +91,7 @@ const Table = ({ peopleList, onCellDataChange }: ITableProps) => {
   return (
     <table>
       <thead>
-        <tr>
-          <th>name</th>
-          <th>DOB</th>
-          <th>nationality</th>
-        </tr>
+        <tr>{columnHeaders}</tr>
       </thead>
       <tbody>{dataRows}</tbody>
     </table>
