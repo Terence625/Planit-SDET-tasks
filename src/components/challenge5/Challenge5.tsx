@@ -31,7 +31,7 @@ const Challenge5 = () => {
           { key: "nationality", label: "Nationality" },
         ]}
         rowList={peopleList}
-        onCellDataChange={(value) => setPeopleList(value)}
+        onChange={(value) => setPeopleList(value)}
       />
       <button onClick={handleDuplicate}>Duplicate</button>
       <button onClick={handleRemove}>Remove</button>

@@ -1,12 +1,23 @@
 import React, { useState } from "react";
 
+const setArrayObjAllProperty = <T, K extends string, V>(
+  arrObj: Record<K, V>[],
+  value: T
+): Record<string, T>[] => {
+  return Array.from(arrObj, (row) =>
+    Object.keys(arrObj).reduce((acc, key) => {
+      return { ...acc, [key]: value };
+    }, {})
+  );
+};
+
 interface ITableProps<RowType, Key> {
   columnHeader: {
     key: Key;
     label: string;
   }[];
   rowList: RowType[];
-  onCellDataChange?: (value: RowType[]) => void;
+  onChange?: (value: RowType[]) => void;
 }
 
 const Table = <
@@ -15,22 +26,17 @@ const Table = <
 >({
   columnHeader,
   rowList,
-  onCellDataChange,
+  onChange,
 }: ITableProps<RowType, Key>) => {
-  const [cellEditable, setCellEditable] = useState(
-    Array.from(rowList, (row) =>
-      Object.keys(row).reduce((acc, key) => {
-        return { ...acc, [key]: false };
-      }, {})
-    )
-  );
+  const initialCellEditable = setArrayObjAllProperty(rowList, false);
+  const [cellEditable, setCellEditable] = useState(initialCellEditable);
 
-  const handleChange = (
+  const handleCellChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number,
     key: Key
   ) => {
-    onCellDataChange?.(
+    onChange?.(
       rowList.map((row, i) => {
         if (i === index) {
           return { ...row, [key]: e.target.value };
@@ -51,17 +57,28 @@ const Table = <
     );
   };
 
+  const handleAddNewLine = () => {
+    const newRowList = [
+      ...rowList,
+      Object.keys(rowList[0]).reduce((acc, key) => {
+        return { ...acc, [key]: "" };
+      }, {}) as RowType,
+    ];
+    onChange?.(newRowList);
+    setCellEditable(setArrayObjAllProperty(newRowList, false));
+  };
+
   const dataCells = (index: number, key: Key, value: string) => {
     return (
       <td
         key={String(key)}
         onDoubleClick={() => setCellEditableFun(index, key, true)}
       >
-        {(cellEditable[index] as Record<Key, string>)[key] ? (
+        {(cellEditable[index] as Record<Key, boolean>)[key] ? (
           <input
             autoFocus
             value={value}
-            onChange={(e) => handleChange(e, index, key)}
+            onChange={(e) => handleCellChange(e, index, key)}
             onBlur={() => setCellEditableFun(index, key, false)}
             onKeyDown={(e) => {
               if (e.key === "Enter") setCellEditableFun(index, key, false);
@@ -81,7 +98,7 @@ const Table = <
   const dataRows = rowList.map((row, index) => {
     return (
       <tr key={String(index)}>
-        {(Object.entries(row) as [Key,string][]).map(([key, value]) =>
+        {(Object.entries(row) as [Key, string][]).map(([key, value]) =>
           dataCells(index, key, value)
         )}
       </tr>
@@ -89,12 +106,15 @@ const Table = <
   });
 
   return (
-    <table>
-      <thead>
-        <tr>{columnHeaders}</tr>
-      </thead>
-      <tbody>{dataRows}</tbody>
-    </table>
+    <div>
+      <table>
+        <thead>
+          <tr>{columnHeaders}</tr>
+        </thead>
+        <tbody>{dataRows}</tbody>
+      </table>
+      <button onClick={handleAddNewLine}>Add new line</button>
+    </div>
   );
 };
 
