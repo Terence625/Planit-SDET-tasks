@@ -23,12 +23,21 @@ const getPeopleListWithAge = (peopleList: typeof initialPeopleList) => {
   });
 };
 
+const arrRemoveDuplicate = <T extends number | string>(
+  arr: Array<T>
+): Array<T> => {
+  let obj: Partial<Record<T, boolean>> = {};
+  return arr.filter((item) => {
+    return obj.hasOwnProperty(item) ? false : (obj[item] = true);
+  });
+};
+
 const Challenge5 = () => {
   const [duplicate, setDuplicate] = useState(false);
   const [peopleList, setPeopleList] = useState(initialPeopleList);
   const [duplicatedPeopleList, setDuplicatedPeopleList] =
     useState(initialPeopleList);
-  const [averageAge, setAverageAge] = useState<number>();
+  const [ageThreshold, setAgeThreshold] = useState<string>("");
 
   const handleDuplicate = () => {
     setDuplicate(true);
@@ -39,12 +48,14 @@ const Challenge5 = () => {
   const handleRemove = () => {
     setDuplicate(false);
   };
-
-  useEffect(() => {
-    const PeopleListWithAge = getPeopleListWithAge(peopleList);
-    const ageArr = PeopleListWithAge.map((person) => person.age);
-    setAverageAge(ageArr.reduce((a, b) => a + b, 0)/ageArr.length);
-  }, [peopleList]);
+  const peopleListWithAge = getPeopleListWithAge(peopleList);
+  const ageArr = peopleListWithAge.map((person) => person.age);
+  const averageAge = ageArr.reduce((a, b) => a + b, 0) / ageArr.length;
+  const countryArrString = arrRemoveDuplicate(
+    peopleList.map((person) => person.nationality)
+  )
+    .reduce((prevCountry, country) => prevCountry + country + ", ", "")
+    .slice(0, -2);
 
   return (
     <div>
@@ -56,9 +67,14 @@ const Challenge5 = () => {
       />
       <div>Average age: {averageAge}</div>
       <div>
-        People with age less than <input style={{ width: "15px" }} />:{" "}
+        People with age less than{" "}
+        <input
+          onChange={(e) => setAgeThreshold(e.target.value)}
+          style={{ width: "15px" }}
+        />
+        :{" "}
       </div>
-      <div>Country list: </div>
+      <div>Country list: {countryArrString}</div>
       <button onClick={handleDuplicate}>Duplicate</button>
       <button onClick={handleRemove}>Remove</button>
       {duplicate && (
