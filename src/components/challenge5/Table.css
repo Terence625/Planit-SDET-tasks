@@ -1,5 +1,6 @@
 .Table table{
   margin-top: 5px;
+  margin-bottom: 5px;
   max-width: 500px;
   border: 1px solid black;
   border-collapse: collapse;

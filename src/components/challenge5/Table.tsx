@@ -39,7 +39,8 @@ const Table = <RowType extends Record<Key, string>, Key extends keyof RowType>({
   const initialCellEditable = setArrayObjAllProperty(rowList, false);
   const initialRowsChecked = setIndexObject(rowList, false);
   const [cellEditable, setCellEditable] = useState(initialCellEditable);
-  const [rowsChecked, setRowChecked] = useState(initialRowsChecked);
+  const [rowsChecked, setRowsChecked] = useState(initialRowsChecked);
+  const [headerChecked, setHeaderChecked] = useState(false);
   const handleCellChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number,
@@ -75,14 +76,15 @@ const Table = <RowType extends Record<Key, string>, Key extends keyof RowType>({
     ];
     onChange?.(newRowList);
     setCellEditable(setArrayObjAllProperty(newRowList, false));
-    setRowChecked((rows) => ({ ...rows, [newRowList.length - 1]: false }));
+    setRowsChecked((rows) => ({ ...rows, [newRowList.length - 1]: false }));
   };
 
   const handleDeleteRows = () => {
     const newRowList = rowList.filter((row, index) => !rowsChecked[index]);
     onChange?.(newRowList);
     setCellEditable(setArrayObjAllProperty(newRowList, false));
-    setRowChecked(setIndexObject(newRowList, false));
+    setRowsChecked(setIndexObject(newRowList, false));
+    setHeaderChecked(false);
   };
 
   const dataCells = (index: number, key: Key, value: string) => {
@@ -136,7 +138,7 @@ const Table = <RowType extends Record<Key, string>, Key extends keyof RowType>({
               id={String(index)}
               checked={rowsChecked[index]}
               onChange={(e) =>
-                setRowChecked((rows) => ({
+                setRowsChecked((rows) => ({
                   ...rows,
                   [index]: e.target.checked,
                 }))
@@ -164,7 +166,19 @@ const Table = <RowType extends Record<Key, string>, Key extends keyof RowType>({
           <tr>
             {editable && (
               <th>
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  checked={headerChecked}
+                  onChange={(e) => {
+                    setHeaderChecked(e.target.checked);
+                    setRowsChecked((rows) => {
+                      const newRowsChecked: Record<number, boolean> = {};
+                      for (const key in rows)
+                        newRowsChecked[key] = e.target.checked;
+                      return newRowsChecked;
+                    });
+                  }}
+                />
               </th>
             )}
             {columnHeaders}
