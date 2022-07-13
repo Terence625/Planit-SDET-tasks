@@ -23,19 +23,23 @@ const setIndexObject = <T extends object[], V>(
   return obj;
 };
 
-interface ITableProps<RowType> {
-  columnHeader: RowType;
+interface ITableProps<RowType, K> {
+  columnHeaderList: {
+    key: K;
+    label: string;
+  }[];
   rowList: RowType[];
   onChange?: (value: RowType[]) => void;
   editable?: boolean;
 }
 
-const Table = <RowType extends Record<Key, string>, Key extends keyof RowType>({
-  columnHeader,
+const Table = <RowType extends Record<K, string>, K extends keyof RowType>({
+  columnHeaderList,
   rowList,
   onChange,
   editable = false,
-}: ITableProps<RowType>) => {
+}: ITableProps<RowType, K>) => {
+  const columnHeaderKeyList = columnHeaderList.map((header) => header.key);
   const initialCellEditable = setArrayObjAllProperty(rowList, false);
   const initialRowsChecked = setIndexObject(rowList, false);
   const [cellEditable, setCellEditable] = useState(initialCellEditable);
@@ -44,7 +48,7 @@ const Table = <RowType extends Record<Key, string>, Key extends keyof RowType>({
   const handleCellChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number,
-    key: Key
+    key: K
   ) => {
     onChange?.(
       rowList.map((row, i) => {
@@ -56,7 +60,7 @@ const Table = <RowType extends Record<Key, string>, Key extends keyof RowType>({
     );
   };
 
-  const setCellEditableFun = (index: number, key: Key, boo: boolean) => {
+  const setCellEditableFun = (index: number, key: K, boo: boolean) => {
     setCellEditable(
       cellEditable.map((cell, i) => {
         if (i === index) {
@@ -70,7 +74,7 @@ const Table = <RowType extends Record<Key, string>, Key extends keyof RowType>({
   const handleAddNewLine = () => {
     const newRowList = [
       ...rowList,
-      Object.keys(columnHeader).reduce((acc, key) => {
+      columnHeaderKeyList.reduce((acc, key) => {
         return { ...acc, [key]: "" };
       }, {}) as RowType,
     ];
@@ -87,14 +91,14 @@ const Table = <RowType extends Record<Key, string>, Key extends keyof RowType>({
     setHeaderChecked(false);
   };
 
-  const dataCells = (index: number, key: Key, value: string) => {
+  const dataCells = (index: number, key: K, value: string) => {
     if (editable) {
       return (
         <td
           key={String(key)}
           onDoubleClick={() => setCellEditableFun(index, key, true)}
         >
-          {(cellEditable[index] as Record<Key, boolean>)[key] ? (
+          {(cellEditable[index] as Record<K, boolean>)[key] ? (
             <div className="inputCell">
               <input
                 autoFocus
@@ -120,11 +124,9 @@ const Table = <RowType extends Record<Key, string>, Key extends keyof RowType>({
     }
   };
 
-  const columnHeaders = (
-    Object.entries(columnHeader) as [string, string][]
-  ).map(([key, value]) => (
-    <th key={key}>
-      <div className="dataCell">{value}</div>
+  const columnHeaders = columnHeaderKeyList.map((key, index) => (
+    <th key={index}>
+      <div className="dataCell">{columnHeaderList[index].label}</div>
     </th>
   ));
 
@@ -146,9 +148,7 @@ const Table = <RowType extends Record<Key, string>, Key extends keyof RowType>({
             />
           </td>
         )}
-        {(Object.entries(row) as [Key, string][]).map(([key, value]) =>
-          dataCells(index, key, value)
-        )}
+        {columnHeaderKeyList.map((key) => dataCells(index, key, row[key]))}
       </tr>
     );
   });
