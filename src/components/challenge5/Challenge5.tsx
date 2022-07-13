@@ -15,6 +15,7 @@ const Challenge5 = () => {
   const handleDuplicate = () => {
     setDuplicate(true);
     const copy = JSON.parse(JSON.stringify(peopleList));
+    console.log(copy)
     setDuplicatedPeopleList(copy);
   };
 
@@ -31,6 +32,7 @@ const Challenge5 = () => {
           nationality: "Nationality",
         }}
         rowList={peopleList}
+        editable
         onChange={(value) => setPeopleList(value)}
       />
       <button onClick={handleDuplicate}>Duplicate</button>

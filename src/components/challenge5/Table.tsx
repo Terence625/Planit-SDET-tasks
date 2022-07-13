@@ -27,12 +27,14 @@ interface ITableProps<RowType> {
   columnHeader: RowType;
   rowList: RowType[];
   onChange?: (value: RowType[]) => void;
+  editable?: boolean;
 }
 
 const Table = <RowType extends Record<Key, string>, Key extends keyof RowType>({
   columnHeader,
   rowList,
   onChange,
+  editable = false,
 }: ITableProps<RowType>) => {
   const initialCellEditable = setArrayObjAllProperty(rowList, false);
   const initialRowsChecked = setIndexObject(rowList, false);
@@ -84,28 +86,36 @@ const Table = <RowType extends Record<Key, string>, Key extends keyof RowType>({
   };
 
   const dataCells = (index: number, key: Key, value: string) => {
-    return (
-      <td
-        key={String(key)}
-        onDoubleClick={() => setCellEditableFun(index, key, true)}
-      >
-        {(cellEditable[index] as Record<Key, boolean>)[key] ? (
-          <div className="inputCell">
-            <input
-              autoFocus
-              value={value}
-              onChange={(e) => handleCellChange(e, index, key)}
-              onBlur={() => setCellEditableFun(index, key, false)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") setCellEditableFun(index, key, false);
-              }}
-            />
-          </div>
-        ) : (
+    if (editable) {
+      return (
+        <td
+          key={String(key)}
+          onDoubleClick={() => setCellEditableFun(index, key, true)}
+        >
+          {(cellEditable[index] as Record<Key, boolean>)[key] ? (
+            <div className="inputCell">
+              <input
+                autoFocus
+                value={value}
+                onChange={(e) => handleCellChange(e, index, key)}
+                onBlur={() => setCellEditableFun(index, key, false)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") setCellEditableFun(index, key, false);
+                }}
+              />
+            </div>
+          ) : (
+            <div className="dataCell">{value}</div>
+          )}
+        </td>
+      );
+    } else {
+      return (
+        <td key={String(key)}>
           <div className="dataCell">{value}</div>
-        )}
-      </td>
-    );
+        </td>
+      );
+    }
   };
 
   const columnHeaders = (
@@ -119,16 +129,21 @@ const Table = <RowType extends Record<Key, string>, Key extends keyof RowType>({
   const dataRows = rowList.map((row, index) => {
     return (
       <tr key={String(index)}>
-        <td>
-          <input
-            type="checkbox"
-            id={String(index)}
-            checked={rowsChecked[index]}
-            onChange={(e) =>
-              setRowChecked((rows) => ({ ...rows, [index]: e.target.checked }))
-            }
-          />
-        </td>
+        {editable && (
+          <td>
+            <input
+              type="checkbox"
+              id={String(index)}
+              checked={rowsChecked[index]}
+              onChange={(e) =>
+                setRowChecked((rows) => ({
+                  ...rows,
+                  [index]: e.target.checked,
+                }))
+              }
+            />
+          </td>
+        )}
         {(Object.entries(row) as [Key, string][]).map(([key, value]) =>
           dataCells(index, key, value)
         )}
@@ -138,14 +153,20 @@ const Table = <RowType extends Record<Key, string>, Key extends keyof RowType>({
 
   return (
     <div className="Table">
-      <button onClick={handleAddNewLine}>Add</button>
-      <button onClick={handleDeleteRows}>Delete</button>
+      {editable && (
+        <div>
+          <button onClick={handleAddNewLine}>Add</button>
+          <button onClick={handleDeleteRows}>Delete</button>
+        </div>
+      )}
       <table>
         <thead>
           <tr>
-            <th>
-              <input type="checkbox" />
-            </th>
+            {editable && (
+              <th>
+                <input type="checkbox" />
+              </th>
+            )}
             {columnHeaders}
           </tr>
         </thead>
