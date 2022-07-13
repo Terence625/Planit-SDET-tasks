@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Table from "./Table";
+import dayjs from "dayjs";
 
 const initialPeopleList = [
   { name: "Terence", dob: "1993-04-25", nationality: "China" },
@@ -14,11 +15,20 @@ const columnHeader: {
   { key: "nationality", label: "Nationality" },
 ];
 
+const getPeopleListWithAge = (peopleList: typeof initialPeopleList) => {
+  const today = dayjs();
+  return peopleList.map((person) => {
+    const personAge = today.diff(person.dob, "year");
+    return { ...person, age: personAge };
+  });
+};
+
 const Challenge5 = () => {
   const [duplicate, setDuplicate] = useState(false);
   const [peopleList, setPeopleList] = useState(initialPeopleList);
   const [duplicatedPeopleList, setDuplicatedPeopleList] =
     useState(initialPeopleList);
+  const [averageAge, setAverageAge] = useState<number>();
 
   const handleDuplicate = () => {
     setDuplicate(true);
@@ -30,6 +40,12 @@ const Challenge5 = () => {
     setDuplicate(false);
   };
 
+  useEffect(() => {
+    const PeopleListWithAge = getPeopleListWithAge(peopleList);
+    const ageArr = PeopleListWithAge.map((person) => person.age);
+    setAverageAge(ageArr.reduce((a, b) => a + b, 0)/ageArr.length);
+  }, [peopleList]);
+
   return (
     <div>
       <Table
@@ -38,6 +54,11 @@ const Challenge5 = () => {
         editable
         onChange={(value) => setPeopleList(value)}
       />
+      <div>Average age: {averageAge}</div>
+      <div>
+        People with age less than <input style={{ width: "15px" }} />:{" "}
+      </div>
+      <div>Country list: </div>
       <button onClick={handleDuplicate}>Duplicate</button>
       <button onClick={handleRemove}>Remove</button>
       {duplicate && (
