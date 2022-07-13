@@ -25,11 +25,11 @@ const Challenge5 = () => {
   return (
     <div>
       <Table
-        columnHeader={[
-          { key: "name", label: "Name" },
-          { key: "DOB", label: "Date of Birth" },
-          { key: "nationality", label: "Nationality" },
-        ]}
+        columnHeader={{
+          name: "Name",
+          DOB: "Date of Birth",
+          nationality: "Nationality",
+        }}
         rowList={peopleList}
         onChange={(value) => setPeopleList(value)}
       />
@@ -37,11 +37,11 @@ const Challenge5 = () => {
       <button onClick={handleRemove}>Remove</button>
       {duplicate && (
         <Table
-          columnHeader={[
-            { key: "name", label: "Name" },
-            { key: "DOB", label: "Date of Birth" },
-            { key: "nationality", label: "Nationality" },
-          ]}
+          columnHeader={{
+            name: "Name",
+            DOB: "Date of Birth",
+            nationality: "Nationality",
+          }}
           rowList={duplicatedPeopleList}
         />
       )}

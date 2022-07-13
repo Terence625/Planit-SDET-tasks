@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Key, useState } from "react";
 import "./Table.css";
 
 const setArrayObjAllProperty = <T, K extends string, V>(
@@ -12,26 +12,32 @@ const setArrayObjAllProperty = <T, K extends string, V>(
   );
 };
 
-interface ITableProps<RowType, Key> {
-  columnHeader: {
-    key: Key;
-    label: string;
-  }[];
+const setIndexObject = <T extends object[], V>(
+  arr: T,
+  value: V
+): Record<number, V> => {
+  const obj = {} as Record<number, V>;
+  for (let i = 0; i < arr.length; i++) {
+    obj[i] = value;
+  }
+  return obj;
+};
+
+interface ITableProps<RowType> {
+  columnHeader: RowType;
   rowList: RowType[];
   onChange?: (value: RowType[]) => void;
 }
 
-const Table = <
-  RowType extends { [P in Key]: string },
-  Key extends keyof RowType
->({
+const Table = <RowType extends Record<Key, string>, Key extends keyof RowType>({
   columnHeader,
   rowList,
   onChange,
-}: ITableProps<RowType, Key>) => {
+}: ITableProps<RowType>) => {
   const initialCellEditable = setArrayObjAllProperty(rowList, false);
+  const initialRowsChecked = setIndexObject(rowList, false);
   const [cellEditable, setCellEditable] = useState(initialCellEditable);
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+  const [rowsChecked, setRowChecked] = useState(initialRowsChecked);
   const handleCellChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number,
@@ -61,20 +67,20 @@ const Table = <
   const handleAddNewLine = () => {
     const newRowList = [
       ...rowList,
-      Object.keys(rowList[0]).reduce((acc, key) => {
+      Object.keys(columnHeader).reduce((acc, key) => {
         return { ...acc, [key]: "" };
       }, {}) as RowType,
     ];
     onChange?.(newRowList);
     setCellEditable(setArrayObjAllProperty(newRowList, false));
+    setRowChecked((rows) => ({ ...rows, [newRowList.length - 1]: false }));
   };
 
   const handleDeleteRows = () => {
-    const newRowList = rowList.filter(
-      (row, index) => !selectedRows.includes(index)
-    );
+    const newRowList = rowList.filter((row, index) => !rowsChecked[index]);
     onChange?.(newRowList);
     setCellEditable(setArrayObjAllProperty(newRowList, false));
+    setRowChecked(setIndexObject(newRowList, false));
   };
 
   const dataCells = (index: number, key: Key, value: string) => {
@@ -102,8 +108,12 @@ const Table = <
     );
   };
 
-  const columnHeaders = columnHeader.map((header) => (
-    <th key={String(header.key)}>{header.label}</th>
+  const columnHeaders = (
+    Object.entries(columnHeader) as [string, string][]
+  ).map(([key, value]) => (
+    <th key={key}>
+      <div className="dataCell">{value}</div>
+    </th>
   ));
 
   const dataRows = rowList.map((row, index) => {
@@ -113,12 +123,9 @@ const Table = <
           <input
             type="checkbox"
             id={String(index)}
+            checked={rowsChecked[index]}
             onChange={(e) =>
-              setSelectedRows((rows) =>
-                e.target.checked
-                  ? [...rows, index]
-                  : rows.filter((item) => item !== index)
-              )
+              setRowChecked((rows) => ({ ...rows, [index]: e.target.checked }))
             }
           />
         </td>
