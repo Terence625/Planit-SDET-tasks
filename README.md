@@ -13,3 +13,9 @@
 8.  In contact page, when filling all the mandatory fields with correct formats, should submit successfully and display sending feedback loader; After submit, should navigate to feedback successful page, and when clicking 'Back' button, should navigate to contact page.
 9.  In contact page, when any mandatory field is blank or is filled with incorrect formats, should not submit successfully and display error messages.
 10. Performance automation test workflow: simulate users add products to cart, then checkout from cart, then finish payment. numbers of users according to the performance requirement of the system. 
+
+## Task two:
+Please download the repo and run ```npm run install``` (make sure you have npm installed), then run ```npm start```. them open ```localhost3000```.
+### Challenge 1
+
+### Challenge 5
