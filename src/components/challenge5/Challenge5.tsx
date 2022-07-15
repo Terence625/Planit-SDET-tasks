@@ -37,7 +37,7 @@ const Challenge5 = () => {
   const [peopleList, setPeopleList] = useState(initialPeopleList);
   const [duplicatedPeopleList, setDuplicatedPeopleList] =
     useState(initialPeopleList);
-  const [ageThreshold, setAgeThreshold] = useState<string>("");
+  const [ageThreshold, setAgeThreshold] = useState<number>();
 
   const handleDuplicate = () => {
     setDuplicate(true);
@@ -56,6 +56,11 @@ const Challenge5 = () => {
   )
     .reduce((prevCountry, country) => prevCountry + country + ", ", "")
     .slice(0, -2);
+  const peopleLessThanAgeThresold = peopleListWithAge
+    .filter((person) => (ageThreshold ? person.age < ageThreshold : false))
+    .map((person) => person.name)
+    .reduce((prevName, Name) => prevName + Name + ", ", "")
+    .slice(0, -2);
 
   return (
     <div>
@@ -69,10 +74,10 @@ const Challenge5 = () => {
       <div>
         People with age less than{" "}
         <input
-          onChange={(e) => setAgeThreshold(e.target.value)}
+          onChange={(e) => setAgeThreshold(Number(e.target.value))}
           style={{ width: "15px" }}
         />
-        :{" "}
+        : {peopleLessThanAgeThresold}
       </div>
       <div>Country list: {countryArrString}</div>
       <button onClick={handleDuplicate}>Duplicate</button>
