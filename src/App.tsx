@@ -4,7 +4,7 @@ import Challenge1 from "./components/Challenge1";
 
 const App = () => {
   return (
-  <div>
+  <div style={{width: "600px"}}>
     <div className="headingXl">Challenge1</div>
     <Challenge1 />
     <div className="headingXl">Challenge5</div>

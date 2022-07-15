@@ -3,7 +3,8 @@
  * @param n: index in the fibonacci sequence
  * @return: the nth number
  */
-function getFibonacci(n) {
+export function getFibonacci(n: number): number {
+  console.log("check")
   if (n === 1) return 0;
   if (n === 2) return 1;
   return getFibonacci(n - 1) + getFibonacci(n - 2);
@@ -14,27 +15,29 @@ function getFibonacci(n) {
  * @param x: input number
  * @return: string indicate if the number is a fibonacci number and the closet index n in fibonacci sequence
  */
-function isFibonacci(x) {
+export function isFibonacci(x: number): string {
   let fibonacciArr = [0, 1];
-  while (x > fibonacciArr.at(-1)) {
-    fibonacciArr.push(fibonacciArr.at(-1) + fibonacciArr.at(-2));
+  let fibonacciArrLen = fibonacciArr.length;
+  while (x > fibonacciArr[fibonacciArrLen - 1]) {
+    fibonacciArr.push(
+      fibonacciArr[fibonacciArrLen - 1] + fibonacciArr[fibonacciArrLen - 2]
+    );
+    fibonacciArrLen = fibonacciArr.length;
   }
-  let fibonacciArrLastNum = fibonacciArr.at(-1);
-  let fibonacciArrASecLastNum = fibonacciArr.at(-2);
+  let fibonacciArrLastNum = fibonacciArr[fibonacciArrLen - 1];
+  let fibonacciArrASecLastNum = fibonacciArr[fibonacciArrLen - 2];
   if (x === 0) return `${x} is the 1st fibonacci number`;
   else if (x === 1) return `${x} is the 2nd or 3rd fibonacci number`;
   else if (fibonacciArrLastNum === x)
-    return `${x} is the ${fibonacciArr.length}th fibonacci number`;
+    return `${x} is the ${fibonacciArrLen}th fibonacci number`;
   else if (x - fibonacciArrASecLastNum === fibonacciArrLastNum - x)
     return `${x} is not a fibonacci number, the closest index in the fibonacci sequence is ${
-      fibonacciArr.length - 1
-    } or ${fibonacciArr.length}`;
+      fibonacciArrLen - 1
+    } or ${fibonacciArrLen}`;
   else if (x - fibonacciArrASecLastNum > fibonacciArrLastNum - x)
-    return `${x} is not a fibonacci number, the closest index in the fibonacci sequence is ${fibonacciArr.length}`;
+    return `${x} is not a fibonacci number, the closest index in the fibonacci sequence is ${fibonacciArrLen}`;
   else
     return `${x} is not a fibonacci number, the closest index in the fibonacci sequence is ${
-      fibonacciArr.length - 1
+      fibonacciArrLen - 1
     }`;
 }
-console.log(getFibonacci(8));
-console.log(isFibonacci(2585));

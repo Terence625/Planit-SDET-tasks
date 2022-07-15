@@ -72,7 +72,7 @@ const Challenge5 = () => {
       />
       <div>Average age: {averageAge}</div>
       <div>
-        People with age less than{" "}
+        {"People with age less than "}
         <input
           onChange={(e) => setAgeThreshold(Number(e.target.value))}
           style={{ width: "15px" }}
