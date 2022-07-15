@@ -4,7 +4,6 @@
  * @return: the nth number
  */
 export function getFibonacci(n: number): number {
-  console.log("check")
   if (n === 1) return 0;
   if (n === 2) return 1;
   return getFibonacci(n - 1) + getFibonacci(n - 2);

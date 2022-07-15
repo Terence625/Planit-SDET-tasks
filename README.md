@@ -16,6 +16,9 @@
 
 ## Task two:
 Please download the repo and run ```npm run install``` (make sure you have npm installed), then run ```npm start```. them open ```localhost3000```.
-### Challenge 1
 
+Both challenges are displayed in UI.
+### Challenge 1
+Logic calculation can be found in ```src\challenge1.ts```. Challenge1 component can have some performance issue because both are expensive calculations.
 ### Challenge 5
+Feature "*Obtain a list of duplicates from the original list*" and "*Alter the original list and remove duplicates*" are included in ```src\components\challenge5\Table.tsx```, other features are included in ```src\components\challenge5\Challenge5.tsx```.
