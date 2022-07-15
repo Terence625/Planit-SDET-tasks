@@ -5,9 +5,9 @@ import Challenge1 from "./components/Challenge1";
 const App = () => {
   return (
   <div>
-    <div>Challenge1</div>
+    <div className="headingXl">Challenge1</div>
     <Challenge1 />
-    <div>Challenge5</div>
+    <div className="headingXl">Challenge5</div>
     <Challenge5 />
   </div>
   )
