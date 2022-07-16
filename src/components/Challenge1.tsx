@@ -1,12 +1,29 @@
 import React, { useMemo, useState } from "react";
-import { getFibonacci, isFibonacci } from "../challenge1";
+import {
+  getFibonacciRecursion,
+  getFibonacciIteration,
+  isFibonacci,
+} from "../challenge1";
 
 const Challenge1 = () => {
-  const [fibonacciIndex, setFibonacciIndex] = useState<number>();
+  const [fibonacciIndexRecursion, setFibonacciIndexRecursion] =
+    useState<number>();
+  const [fibonacciIndexIteration, setFibonacciIndexIteration] =
+    useState<number>();
   const [inputNumber, setInputNumber] = useState<number>();
-  const fibonacciNumber = useMemo(
-    () => (fibonacciIndex ? getFibonacci(fibonacciIndex) : ""),
-    [fibonacciIndex]
+  const fibonacciNumberRecursion = useMemo(
+    () =>
+      fibonacciIndexRecursion
+        ? getFibonacciRecursion(fibonacciIndexRecursion)
+        : "",
+    [fibonacciIndexRecursion]
+  );
+  const fibonacciNumbeIteration = useMemo(
+    () =>
+      fibonacciIndexIteration
+        ? getFibonacciIteration(fibonacciIndexIteration)
+        : "",
+    [fibonacciIndexIteration]
   );
   const isFibonacciNumber = useMemo(
     () => (typeof inputNumber === "number" ? isFibonacci(inputNumber) : ""),
@@ -18,17 +35,28 @@ const Challenge1 = () => {
       <div>
         {"The "}
         <input
-          onChange={(e) => setFibonacciIndex(Number(e.target.value))}
+          onChange={(e) => setFibonacciIndexRecursion(Number(e.target.value))}
           style={{ width: "15px" }}
         />
-        {" number in the fibonacci sequence: " + fibonacciNumber}
+        {" number in the fibonacci sequence with recursive function: " +
+          fibonacciNumberRecursion}
       </div>
       <div>
+        {"The "}
+        <input
+          onChange={(e) => setFibonacciIndexIteration(Number(e.target.value))}
+          style={{ width: "15px" }}
+        />
+        {" number in the fibonacci sequence with iterative function: " +
+          fibonacciNumbeIteration}
+      </div>
+      <div>
+        {"Check if a number is in fabonacci sequence "}
         <input
           onChange={(e) => setInputNumber(Number(e.target.value))}
           style={{ width: "15px" }}
         />
-        {" " + isFibonacciNumber}
+        {": " + isFibonacciNumber}
       </div>
     </div>
   );

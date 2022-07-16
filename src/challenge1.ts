@@ -3,10 +3,24 @@
  * @param n: index in the fibonacci sequence
  * @return: the nth number
  */
-export function getFibonacci(n: number): number {
+export function getFibonacciRecursion(n: number): number {
   if (n === 1) return 0;
   if (n === 2) return 1;
-  return getFibonacci(n - 1) + getFibonacci(n - 2);
+  return getFibonacciRecursion(n - 1) + getFibonacciRecursion(n - 2);
+}
+
+export function getFibonacciIteration(n: number): number {
+  if (n === 1) return 0;
+  if (n === 2) return 1;
+  let fibonacciPrevNum1 = 0;
+  let fibonacciPrevNum2 = 1;
+  let fibonacciNum = fibonacciPrevNum1 + fibonacciPrevNum2;
+  for (let i = 3; i < n; i++) {
+    fibonacciPrevNum1 = fibonacciPrevNum2;
+    fibonacciPrevNum2 = fibonacciNum;
+    fibonacciNum = fibonacciPrevNum1 + fibonacciPrevNum2;
+  }
+  return fibonacciNum;
 }
 
 /**
