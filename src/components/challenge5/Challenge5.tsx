@@ -41,7 +41,6 @@ const Challenge5 = () => {
 
   const peopleListWithAge = getPeopleListWithAge(peopleList);
   const ageArr = peopleListWithAge.map((person) => person.age);
-  console.log(peopleListWithAge)
   //calculate average age
   const averageAge = Math.floor(ageArr.reduce((a, b) => a + b, 0) / ageArr.length);
   //get the unique list of country

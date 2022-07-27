@@ -35,7 +35,7 @@ export function isFibonacci(x: number): string {
     fibonacciArr.push(
       fibonacciArr[fibonacciArrLen - 1] + fibonacciArr[fibonacciArrLen - 2]
     );
-    fibonacciArrLen = fibonacciArr.length;
+    fibonacciArrLen += 1;
   }
   let fibonacciArrLastNum = fibonacciArr[fibonacciArrLen - 1];
   let fibonacciArrASecLastNum = fibonacciArr[fibonacciArrLen - 2];
