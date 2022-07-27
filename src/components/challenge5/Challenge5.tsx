@@ -39,28 +39,33 @@ const Challenge5 = () => {
     useState(initialPeopleList);
   const [ageThreshold, setAgeThreshold] = useState<number>();
 
-  const handleDuplicate = () => {
-    setDuplicate(true);
-    const copy = JSON.parse(JSON.stringify(peopleList));
-    setDuplicatedPeopleList(copy);
-  };
-
-  const handleRemove = () => {
-    setDuplicate(false);
-  };
   const peopleListWithAge = getPeopleListWithAge(peopleList);
   const ageArr = peopleListWithAge.map((person) => person.age);
-  const averageAge = ageArr.reduce((a, b) => a + b, 0) / ageArr.length;
+  console.log(peopleListWithAge)
+  //calculate average age
+  const averageAge = Math.floor(ageArr.reduce((a, b) => a + b, 0) / ageArr.length);
+  //get the unique list of country
   const countryArrString = arrRemoveDuplicate(
     peopleList.map((person) => person.nationality)
   )
     .reduce((prevCountry, country) => prevCountry + country + ", ", "")
     .slice(0, -2);
+  //find all people with age less than N
   const peopleLessThanAgeThresold = peopleListWithAge
     .filter((person) => (ageThreshold ? person.age < ageThreshold : false))
     .map((person) => person.name)
     .reduce((prevName, Name) => prevName + Name + ", ", "")
     .slice(0, -2);
+  //Obtain a list of duplicates from the original list
+  const handleDuplicate = () => {
+    setDuplicate(true);
+    const copy = JSON.parse(JSON.stringify(peopleList));
+    setDuplicatedPeopleList(copy);
+  };
+  //remove duplicates
+  const handleRemove = () => {
+    setDuplicate(false);
+  };
 
   return (
     <div>

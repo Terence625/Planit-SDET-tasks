@@ -45,6 +45,7 @@ const Table = <RowType extends Record<K, string>, K extends keyof RowType>({
   const [cellEditable, setCellEditable] = useState(initialCellEditable);
   const [rowsChecked, setRowsChecked] = useState(initialRowsChecked);
   const [headerChecked, setHeaderChecked] = useState(false);
+  //modify existing data
   const handleCellChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number,
@@ -59,18 +60,7 @@ const Table = <RowType extends Record<K, string>, K extends keyof RowType>({
       })
     );
   };
-
-  const setCellEditableFun = (index: number, key: K, boo: boolean) => {
-    setCellEditable(
-      cellEditable.map((cell, i) => {
-        if (i === index) {
-          return { ...cell, [key]: boo };
-        }
-        return cell;
-      })
-    );
-  };
-
+  //add new data
   const handleAddNewLine = () => {
     const newRowList = [
       ...rowList,
@@ -82,13 +72,24 @@ const Table = <RowType extends Record<K, string>, K extends keyof RowType>({
     setCellEditable(setArrayObjAllProperty(newRowList, false));
     setRowsChecked((rows) => ({ ...rows, [newRowList.length - 1]: false }));
   };
-
+  //remove existing data
   const handleDeleteRows = () => {
     const newRowList = rowList.filter((row, index) => !rowsChecked[index]);
     onChange?.(newRowList);
     setCellEditable(setArrayObjAllProperty(newRowList, false));
     setRowsChecked(setIndexObject(newRowList, false));
     setHeaderChecked(false);
+  };
+
+  const setCellEditableFun = (index: number, key: K, boo: boolean) => {
+    setCellEditable(
+      cellEditable.map((cell, i) => {
+        if (i === index) {
+          return { ...cell, [key]: boo };
+        }
+        return cell;
+      })
+    );
   };
 
   const dataCells = (index: number, key: K, value: string) => {
